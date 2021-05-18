@@ -1,0 +1,156 @@
+version: "3.0"
+services:
+  app:
+    image: nexusnetsoft/spryker-docker-app:7.4
+    depends_on:
+      - db
+      - es01
+      - ardb
+      - rabbitmq
+      - jenkins
+    ports:
+      - "80:80"
+      - "10001:10001"
+      - "2222:22"
+    env_file:
+      - ./env/app.env
+    volumes:
+        - ../current:/data/shop/development/current:rw
+        - ./init.d/local-php.ini:/usr/local/etc/php/conf.d/local-php.ini
+    networks:
+      default:
+        aliases:
+          - "de.test-www.suite.local"
+          - "de.test-zed.suite.local"
+
+  db:
+    image: postgres:12-alpine
+    env_file:
+      - ./env/db.env
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+#  elasticsearch:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
+#    env_file:
+#      - ./env/elastic.env
+#    ports:
+#      - 9200:9200
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "localhost:9200/_cat/health"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 10
+#    ulimits:
+#      memlock:
+#        soft: -1
+#        hard: -1
+
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
+    environment:
+      - node.name=es01
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es02,es03
+      - cluster.initial_master_nodes=es01,es02,es03
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+  es02:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
+    environment:
+      - node.name=es02
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es01,es03
+      - cluster.initial_master_nodes=es01,es02,es03
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+  es03:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
+    environment:
+      - node.name=es03
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es01,es02
+      - cluster.initial_master_nodes=es01,es02,es03
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+#  appsearch:
+#    image: docker.elastic.co/app-search/app-search:7.6.2
+#    environment:
+#      - "elasticsearch.host=http://es01:9200"
+#      - "allow_es_settings_modification=true"
+#      - "JAVA_OPTS=-Xmx512m"
+#    ports:
+#      - "3002:3002"
+
+  ardb:
+    image: nexusnetsoft/spryker-docker-ardb:latest
+    ports:
+      - "6379:16379"
+
+  rabbitmq:
+    image: rabbitmq:3.7-management
+    env_file:
+      - ./env/rabbitmq.env
+    ports:
+      - "15672:15672"
+
+  jenkins:
+    image: nexusnetsoft/jenkins-php:7.2
+    env_file:
+      - ./env/app.env
+    ports:
+      - "9090:8080"
+    volumes:
+      - ../current:/data/shop/development/current:rw
+
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - 1080:1080
+
+  chrome:
+    image: selenium/node-chrome:3.14.0-gallium
+    env_file:
+      - ./env/hub.env
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - hub
+
+  hub:
+    image: selenium/hub:3.14.0-gallium
+    env_file:
+      - ./env/hub.env
+    ports:
+      - "4444:4444"
+
+volumes:
+  project-data: {}
+  ardb-data: {}
+  elastic-data: {}
+  db-data: {}
+  rabbitmq-data: {}
+  data01:
+    driver: local
+  data02:
+    driver: local
+  data03:
+    driver: local
+
