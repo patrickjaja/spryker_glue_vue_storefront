@@ -4,6 +4,3 @@
 [submodule "vsf-theme"]
 	path = vsf-theme
 	url = https://github.com/patrickjaja/vsf-theme
-[submodule "docker"]
-	path = docker
-	url = https://github.com/spryker/docker-sdk.git
