@@ -25,7 +25,10 @@ Open - VSF: http://localhost:3000
     - https://github.com/spryker/vsf-theme
     - https://spryker.com/en/press-release-spryker-vue-storefront/
     - https://spryker-vsf-docs.web.app/
- 
+
+# update submodules (generally work with submodules)
+ - https://documentation.spryker.com/docs/choosing-a-docker-sdk-version#configuring-git-submodule
+
 # User Journeys
 ## buy product as guest
  - Open http://localhost:3000
