@@ -1,6 +1,6 @@
 [VueStoreFront Frontend](https://github.com/patrickjaja/vsf-theme) + latest spryker suite (more details in [deploy.yml](https://github.com/patrickjaja/suite/deploy.yml))
 
-# install (Tested on ArchLinux)
+# Install (Tested on ArchLinux)
  - `git clone --recurse-submodules https://github.com/patrickjaja/spryker_glue_vue_storefront`
  - `cd spryker_glue_vue_storefront/suite`
  - `docker/sdk boot -v`
@@ -14,7 +14,7 @@
 Open - VSF: http://localhost:3000
 
 # Prerequisite
- - `nvm install 12` ( + `source /usr/share/nvm/nvm.sh`, `nvm use 12` )
+ - node12
  - docker
  - yarn
 
@@ -28,7 +28,7 @@ Open - VSF: http://localhost:3000
  
 # User Journeys
 ## buy product as guest
- - Open http://192.168.87.162:3000/
+ - Open http://localhost:3000
  - Click on category 'Computer'
  - Select first product 'DELL OptiPlex 3020'
  - Choose Option '3.3 GHz'
