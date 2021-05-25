@@ -2,7 +2,3 @@
 	path = suite
 	url = https://github.com/patrickjaja/suite.git
 	branch = master
-[submodule "vsf-theme"]
-	path = vsf-theme
-	url = https://github.com/patrickjaja/vsf-theme
-	branch = master
